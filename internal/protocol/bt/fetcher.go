@@ -2,13 +2,16 @@ package bt
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/GopeedLab/gopeed/internal/controller"
 	"github.com/GopeedLab/gopeed/internal/fetcher"
 	"github.com/GopeedLab/gopeed/pkg/base"
 	"github.com/GopeedLab/gopeed/pkg/protocol/bt"
 	"github.com/GopeedLab/gopeed/pkg/util"
 	"github.com/anacrolix/torrent"
+	"github.com/anacrolix/torrent/dialer"
 	"github.com/anacrolix/torrent/metainfo"
+	"net"
 	"path"
 	"path/filepath"
 	"sync"
@@ -66,6 +69,17 @@ func (f *Fetcher) initClient() (err error) {
 		},
 	})
 	client, err = torrent.NewClient(cfg)
+	if err != nil {
+		return err
+	}
+
+	client.AddDialer(torrent.NetworkDialer{Network: "tcp", Dialer: dialer.Default})
+	l, err := net.Listen("tcp", "0.0.0.0:50000")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("created listener %q", l)
+	client.AddListener(l)
 	return
 }
 
