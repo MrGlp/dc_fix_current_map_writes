@@ -55,7 +55,7 @@ func (f *Fetcher) initClient() (err error) {
 	}
 
 	cfg := torrent.NewDefaultClientConfig()
-	cfg.ListenPort = 0
+	cfg.ListenPort = 37784
 	cfg.DefaultStorage = newFileOpts(newFileClientOpts{
 		ClientBaseDir: cfg.DataDir,
 		HandleFileTorrent: func(infoHash metainfo.Hash, ft *fileTorrentImpl) {
